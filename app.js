@@ -2,6 +2,8 @@ let round = 1;
 
 const ScreenManager = (function() {
     const domCells = document.querySelectorAll('.cell');
+    let resultText,
+        resetButton;
 
     for(let i = 0; i < domCells.length; i++){
         let row = Math.floor(i / 3) + 1;
@@ -23,16 +25,37 @@ const ScreenManager = (function() {
     }
 
     const declareResult = (result) => {
-        const resultText = document.querySelector('.result-text');
+        resultText = document.querySelector('.result-text');
         resultText.textContent = result;
+    }
+
+    const addGameOverButton = () => {
+        const pageContainer = document.querySelector('.page-container');
+        resetButton = document.createElement('button');
+        resetButton.textContent = "Restart Game";
+        resetButton.classList.add('restart-button');
+        pageContainer.appendChild(resetButton);
+
+        resetButton.addEventListener('click', () => {
+            resetGameScreen();
+        })
+
+    }
+
+    const resetGameScreen = () => {
+        GameController.resetGame();
+        resetButton.remove();
+        resultText.textContent = "";
     }
 
     return {
         displayValues,
-        declareResult
+        declareResult,
+        addGameOverButton
     }
 }
 )();
+
 
 
 const GameBoard = (function() {
@@ -54,6 +77,14 @@ const GameBoard = (function() {
         });
     }
 
+    const resetBoard = () => {
+        for (let i = 0; i < rows; i++){
+            for (let j = 0; j < columns; j++){
+                board[i][j].changeValue("");
+            }
+        }
+    }
+
     const getRowSize = () => rows;
     const getColumnSize = () => columns;
 
@@ -64,7 +95,8 @@ const GameBoard = (function() {
         showValues,
         getRowSize,
         getColumnSize,
-        getCell
+        getCell,
+        resetBoard
     }
 })();
 
@@ -127,6 +159,13 @@ const GameController = (function() {
 
     }
 
+    const resetGame = () => {
+        GameBoard.resetBoard();
+        checkWinCondition();
+        ScreenManager.displayValues();
+        round = 1;
+    }
+
     const checkWinCondition = () => {
         isOver = false;
         let winner;
@@ -172,11 +211,16 @@ const GameController = (function() {
 
         if(isOver) console.log(`Oyun bitti! Kazanan ${winner.getName()}!`);
 
-        if(isOver) ScreenManager.declareResult(`Oyun bitti! Kazanan ${winner.getName()}!`);
+        if(isOver) {
+            ScreenManager.declareResult(`Oyun bitti! Kazanan ${winner.getName()}!`);
+            ScreenManager.addGameOverButton();
+        }
+            
     } 
 
     return {
         play,
-        checkWinCondition
+        checkWinCondition,
+        resetGame
     };
 })();

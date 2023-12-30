@@ -16,6 +16,10 @@ body {
     margin: 0 auto;
     padding-top: 8rem;
     background-color: rgb(248, 248, 248);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .board-container {
@@ -63,4 +67,18 @@ body {
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
+}
+
+.restart-button {
+    width: 8rem;
+    height: 3rem;
+    background-color: aliceblue;
+    color: darkslategrey;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.restart-button:hover {
+    cursor: pointer;
+    background-color: antiquewhite;
 }
