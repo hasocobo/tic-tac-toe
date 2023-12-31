@@ -15,11 +15,15 @@ body {
     width: 46vw;
     margin: 0 auto;
     padding-top: 8rem;
-    background-color: rgb(248, 248, 248);
     
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.start-scene > .page-container {
+    height: 300px;
+    background-color: white;
 }
 
 .board-container {
@@ -44,7 +48,7 @@ body {
 }
 
 .cell {
-    background-color: rgb(249, 249, 249);
+    background-color: rgb(255, 253, 230);
     height: 150px;
     border: 1px solid rgb(80, 80, 80);
     cursor: pointer;
@@ -69,16 +73,51 @@ body {
     text-align: center;
 }
 
-.restart-button {
+button {
     width: 8rem;
     height: 3rem;
-    background-color: aliceblue;
-    color: darkslategrey;
+    background-color: white;
+    color: grey;
     border-radius: 8px;
     margin-top: 2rem;
+
+    font-size: 1rem;
+    font-weight: 700;
+    transition: 0.2s ease-in-out;
 }
 
-.restart-button:hover {
+button:hover {
     cursor: pointer;
-    background-color: antiquewhite;
+    background-color: aliceblue;
 }
+
+.game-scene {
+    display: none;
+}
+
+.player-selection {
+    text-align: center;
+    display: flex;
+    gap: 4rem;
+}
+
+input {
+    margin-top: 1rem;
+    width: 10rem;
+    height: 3rem;
+    border-radius: 12px;
+    outline: none;
+    border: 1px solid grey;
+
+    text-align: center;
+    font-size: 1.2rem;
+    color: darkslategrey;
+}
+
+.return-button {
+    position: absolute;
+    cursor: pointer;
+    left: 2%;
+    top: 2%;
+}
+

@@ -1,10 +1,11 @@
 let round = 1;
 
+
 const ScreenManager = (function() {
     const domCells = document.querySelectorAll('.cell');
     let resultText,
         resetButton;
-
+        
     for(let i = 0; i < domCells.length; i++){
         let row = Math.floor(i / 3) + 1;
         let column = i % 3 + 1;
@@ -30,7 +31,7 @@ const ScreenManager = (function() {
     }
 
     const addGameOverButton = () => {
-        const pageContainer = document.querySelector('.page-container');
+        const pageContainer = document.querySelector('.game-scene .page-container');
         resetButton = document.createElement('button');
         resetButton.textContent = "Restart Game";
         resetButton.classList.add('restart-button');
@@ -48,10 +49,38 @@ const ScreenManager = (function() {
         resultText.textContent = "";
     }
 
+    const startGame = () => {
+        const startButton = document.querySelector('.start-game-button');
+        const startScene = document.querySelector('.start-scene');
+        const gameScene = document.querySelector('.game-scene');
+        const returnButton = document.querySelector('.return-button');
+
+        startButton.addEventListener('click', () => {
+            setPlayerNames();
+            startScene.style = "display: none;";
+            gameScene.style = "display: block";
+        })
+        returnButton.addEventListener('click', () => {
+            startScene.style = "display: block;";
+            gameScene.style = "display: none";
+        })
+
+    }
+
+    const setPlayerNames = () => {
+        const p1 = document.querySelector('#p1-name');
+        const p2 = document.querySelector('#p2-name');
+
+        GameController.playerOne.changeName(p1.value === "" ? "Player One": p1.value);
+        GameController.playerTwo.changeName(p2.value === "" ? "Player Two": p2.value);
+    }
+
     return {
         displayValues,
         declareResult,
-        addGameOverButton
+        addGameOverButton,
+        startGame,
+        setPlayerNames
     }
 }
 )();
@@ -119,17 +148,21 @@ function Player(name, sign) {
     const getName = () => playerName;
     const getSign = () => playerSign;
 
+    const changeName = (newName) => {playerName = newName};
+
     return {
         getName,
-        getSign
+        getSign,
+        changeName
     }
 }
 
 
 const GameController = (function() {
-    const playerOne = Player("Hasan", "X");
-    const playerTwo = Player("Recep", "O");
+    const playerOne = Player("Player One", "X");
+    const playerTwo = Player("Player Two", "O");
     let isOver;
+    let isTie;
 
     let activePlayer = playerOne;
 
@@ -168,6 +201,7 @@ const GameController = (function() {
 
     const checkWinCondition = () => {
         isOver = false;
+        isTie = false;
         let winner;
 
 
@@ -209,11 +243,28 @@ const GameController = (function() {
             winner = GameBoard.board[0][2].getValue() === "X" ? playerOne : playerTwo;
         }
 
-        if(isOver) console.log(`Oyun bitti! Kazanan ${winner.getName()}!`);
+        //check if it's a tie
+        isTie = (isOver === true) ? false : true ; // if game is over, it's cannot be a tie
+        for (let i = 0; i < GameBoard.getRowSize(); i++) {
+            for (let j = 0; j < GameBoard.getColumnSize(); j++) {
+                let cell = GameBoard.getCell(i, j)
+                if(cell.getValue() !== "X" && cell.getValue() !== "O") {
+                    isTie = false;
+                    break;
+                }
+            }
+        } 
+
+
+        if(isTie) {
+            ScreenManager.declareResult('It\'s a tie! There\'s no winner.')
+            ScreenManager.addGameOverButton();
+        }
 
         if(isOver) {
-            ScreenManager.declareResult(`Oyun bitti! Kazanan ${winner.getName()}!`);
+            ScreenManager.declareResult(`Game is over! Winner is ${winner.getName()}!`);
             ScreenManager.addGameOverButton();
+
         }
             
     } 
@@ -221,6 +272,11 @@ const GameController = (function() {
     return {
         play,
         checkWinCondition,
-        resetGame
+        resetGame,
+        playerOne,
+        playerTwo
     };
 })();
+
+
+ScreenManager.startGame();
