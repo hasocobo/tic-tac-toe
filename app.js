@@ -244,7 +244,7 @@ const GameController = (function() {
         }
 
         //check if it's a tie
-        isTie = (isOver === true) ? false : true ; // if game is over, it's cannot be a tie
+        isTie = (isOver === true) ? false : true ; // if game is over, it cannot be a tie
         for (let i = 0; i < GameBoard.getRowSize(); i++) {
             for (let j = 0; j < GameBoard.getColumnSize(); j++) {
                 let cell = GameBoard.getCell(i, j)
